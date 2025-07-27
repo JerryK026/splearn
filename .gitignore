@@ -1,0 +1,75 @@
+# Gradle
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Java
+*.class
+*.war
+*.ear
+*.jar
+target/
+
+# Kotlin
+*.kt.bak
+
+# Spring Boot
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS generated files
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+pids
+*.tgz
+*.tar.gz
+
+# Dependency directories
+node_modules/
+
+# Application specific
+application-local.properties
+application-dev.properties
+application-prod.properties
