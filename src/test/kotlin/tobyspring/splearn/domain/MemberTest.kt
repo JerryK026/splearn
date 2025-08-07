@@ -1,66 +1,36 @@
 package tobyspring.splearn.domain
 
-import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.DisplayName
-import kotlin.test.Test
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 
-class MemberTest {
-    @Test
-    fun createMember() {
+class MemberKotestTest : StringSpec({
+    "회원 생성 시 상태는 PENDING이다" {
         val member = Member("kskyung0624@gmail.com", "Soko", "secret")
-
-        Assertions.assertThat(member.status).isEqualTo(MemberStatus.PENDING)
+        member.status shouldBe MemberStatus.PENDING
     }
 
-    // 컴파일 에러 발생해서 주석 처리
-    //    @Test
-    //    fun constructorNullCheck() {
-    //        Assertions.assertThatThrownBy {
-    //            Member(null, "Soko", "secret")
-    //        }.isInstanceOf(NullPointerException::class.java)
-    //    }
-
-    @Test
-    fun activate() {
+    "PENDING 상태의 회원만 활성화할 수 있다" {
         val member = Member("kskyung0624@gmail.com", "Soko", "secret")
+        member.activate()
+        member.status shouldBe MemberStatus.ACTIVE
+
+        shouldThrow<IllegalStateException> {
+            member.activate()
+        }
+    }
+
+    "비활성화 실패 테스트" {
+        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
+
+        shouldThrow<IllegalStateException> {
+            member.deactivate()
+        }
 
         member.activate()
 
-        Assertions.assertThat(member.status).isEqualTo(MemberStatus.ACTIVE)
+        shouldThrow<IllegalStateException> {
+            member.activate()
+        }
     }
-
-    @Test
-    fun activateFail() {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
-
-        member.activate()
-
-        Assertions.assertThatThrownBy { member.activate() }
-            .isInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    @DisplayName("ACTIVE 상태에서만 DEACTIVATE 상태로 만들 수 있다.")
-    fun deactivate() {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
-        member.activate()
-
-        member.deactivate()
-
-        Assertions.assertThat(member.status).isEqualTo(MemberStatus.DEACTIVATED)
-    }
-
-    @Test
-    fun deactivateFail() {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
-
-        Assertions.assertThatThrownBy { member.deactivate() }
-            .isInstanceOf(IllegalStateException::class.java)
-
-        member.activate()
-        member.deactivate()
-
-        Assertions.assertThatThrownBy { member.deactivate() }
-            .isInstanceOf(IllegalStateException::class.java)
-    }
-}
+})
