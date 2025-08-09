@@ -39,18 +39,29 @@ lateinit var passwordEncoder: PasswordEncoder
 }
 ```
 
-### 3. PasswordEncoder를 fun interface로 변경
+### 3. 코드 일관성 개선 (this. 참조)
 ```kotlin
-fun interface PasswordEncoder {
-    fun encode(password: String): String
-    
-    fun matches(password: String, passwordHash: String): Boolean {
-        return encode(password) == passwordHash
-    }
+// 현재: this. 참조가 일관되지 않음
+fun activate(): Unit {
+    check(status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
+    this.status = MemberStatus.ACTIVE  // this. 사용
 }
 
-// 테스트에서 람다로 간소화 가능
-passwordEncoder = PasswordEncoder { it.uppercase() }
+fun deactivate(): Unit {
+    check(this.status == MemberStatus.ACTIVE) { "ACTIVE 상태가 아닙니다" }
+    this.status = MemberStatus.DEACTIVATED
+}
+
+// 개선: 일관된 this. 사용 + Unit 제거
+fun activate() {
+    check(status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
+    status = MemberStatus.ACTIVE
+}
+
+fun deactivate() {
+    check(status == MemberStatus.ACTIVE) { "ACTIVE 상태가 아닙니다" }
+    status = MemberStatus.DEACTIVATED
+}
 ```
 
 ### 4. 캡슐화 강화
@@ -83,5 +94,5 @@ value class Email(val value: String) {
 3. `this.` 참조 일관성 + `Unit` 제거
 
 ### Medium Priority
-4. `fun interface` 도입
-5. private setter로 캡슐화 강화
+4. private setter로 캡슐화 강화  
+5. Value Object 도입 고려
