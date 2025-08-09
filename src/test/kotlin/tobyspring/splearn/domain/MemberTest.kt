@@ -6,10 +6,10 @@ import io.kotest.matchers.shouldBe
 
 class MemberKotestTest : StringSpec({
     lateinit var member: Member
-    lateinit var passowrdEncoder: PasswordEncoder
+    lateinit var passwordEncoder: PasswordEncoder
 
     beforeEach {
-        passowrdEncoder = object : PasswordEncoder {
+        passwordEncoder = object : PasswordEncoder {
             override fun encode(password: String): String {
                 return password.uppercase()
             }
@@ -18,7 +18,7 @@ class MemberKotestTest : StringSpec({
                 return encode(password) == passwordHash
             }
         }
-        member = Member.create("kskyung0624@gmail.com", "Soko", "secret", passowrdEncoder)
+        member = Member.create("kskyung0624@gmail.com", "Soko", "secret", passwordEncoder)
     }
 
     "회원 생성 시 상태는 PENDING이다" {
@@ -47,8 +47,8 @@ class MemberKotestTest : StringSpec({
     }
 
     "비밀번호 검증 테스트" {
-        member.verifyPassword("secret", passowrdEncoder) shouldBe true
-        member.verifyPassword("hello", passowrdEncoder) shouldBe false
+        member.verifyPassword("secret", passwordEncoder) shouldBe true
+        member.verifyPassword("hello", passwordEncoder) shouldBe false
     }
 
     "닉네임 변경 테스트" {
@@ -58,8 +58,8 @@ class MemberKotestTest : StringSpec({
     }
 
     "비밀번호 변경 테스트" {
-        member.changePassword("verySecret", passowrdEncoder)
+        member.changePassword("verySecret", passwordEncoder)
 
-        member.verifyPassword("secret", passowrdEncoder) shouldBe true
+        member.verifyPassword("secret", passwordEncoder) shouldBe true
     }
 })
