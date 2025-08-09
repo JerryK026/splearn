@@ -5,13 +5,27 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
 class MemberKotestTest : StringSpec({
+    lateinit var member: Member
+    lateinit var passowrdEncoder: PasswordEncoder
+
+    beforeEach {
+        passowrdEncoder = object : PasswordEncoder {
+            override fun encode(password: String): String {
+                return password.uppercase()
+            }
+
+            override fun matches(password: String, passwordHash: String): Boolean {
+                return encode(password) == passwordHash
+            }
+        }
+        member = Member.create("kskyung0624@gmail.com", "Soko", "secret", passowrdEncoder)
+    }
+
     "회원 생성 시 상태는 PENDING이다" {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
         member.status shouldBe MemberStatus.PENDING
     }
 
     "PENDING 상태의 회원만 활성화할 수 있다" {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
         member.activate()
         member.status shouldBe MemberStatus.ACTIVE
 
@@ -21,8 +35,6 @@ class MemberKotestTest : StringSpec({
     }
 
     "비활성화 실패 테스트" {
-        val member = Member("kskyung0624@gmail.com", "Soko", "secret")
-
         shouldThrow<IllegalStateException> {
             member.deactivate()
         }
@@ -32,5 +44,22 @@ class MemberKotestTest : StringSpec({
         shouldThrow<IllegalStateException> {
             member.activate()
         }
+    }
+
+    "비밀번호 검증 테스트" {
+        member.verifyPassword("secret", passowrdEncoder) shouldBe true
+        member.verifyPassword("hello", passowrdEncoder) shouldBe false
+    }
+
+    "닉네임 변경 테스트" {
+        member.nickname shouldBe "Soko"
+        member.changeNickname("Bomi")
+        member.nickname shouldBe "Bomi"
+    }
+
+    "비밀번호 변경 테스트" {
+        member.changePassword("verySecret", passowrdEncoder)
+
+        member.verifyPassword("secret", passowrdEncoder) shouldBe true
     }
 })
