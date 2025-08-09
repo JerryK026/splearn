@@ -4,9 +4,10 @@ package tobyspring.splearn.domain
 class Member private constructor(
     val email: String,
     var nickname: String,
-    var passwordHsh: String
+    private var passwordHsh: String
 ) {
     var status: MemberStatus = MemberStatus.PENDING
+        private set
 
     companion object {
         fun create(email: String, nickname: String, password: String, passwordEncoder: PasswordEncoder): Member {
@@ -15,9 +16,9 @@ class Member private constructor(
     }
 
     fun activate(): Unit {
-        check(this.status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
+        check(status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
 
-        status = MemberStatus.ACTIVE
+        this.status = MemberStatus.ACTIVE
     }
 
     fun deactivate(): Unit {
