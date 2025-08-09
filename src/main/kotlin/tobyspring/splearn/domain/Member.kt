@@ -16,7 +16,7 @@ class Member private constructor(
     }
 
     fun activate(): Unit {
-        check(status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
+        check(this.status == MemberStatus.PENDING) { "PENDING 상태가 아닙니다" }
 
         this.status = MemberStatus.ACTIVE
     }
