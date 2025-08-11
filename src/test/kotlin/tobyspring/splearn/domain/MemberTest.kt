@@ -18,7 +18,7 @@ class MemberKotestTest : StringSpec({
                 return encode(password) == passwordHash
             }
         }
-        member = Member.create("kskyung0624@gmail.com", "Soko", "secret", passwordEncoder)
+        member = Member.create(MemberCreateRequest("kskyung0624@gmail.com", "Soko", "secret"), passwordEncoder)
     }
 
     "회원 생성 시 상태는 PENDING이다" {
@@ -60,6 +60,16 @@ class MemberKotestTest : StringSpec({
     "비밀번호 변경 테스트" {
         member.changePassword("verySecret", passwordEncoder)
 
-        member.verifyPassword("secret", passwordEncoder) shouldBe true
+        member.verifyPassword("verySecret", passwordEncoder) shouldBe true
+    }
+
+    "active 상태 검증 테스트" {
+        member.isActive() shouldBe false
+
+        member.activate()
+        member.isActive() shouldBe true
+
+        member.deactivate()
+        member.isActive() shouldBe false
     }
 })
