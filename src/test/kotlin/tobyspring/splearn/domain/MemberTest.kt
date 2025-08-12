@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class MemberKotestTest : StringSpec({
+class MemberTest : StringSpec({
     lateinit var member: Member
     lateinit var passwordEncoder: PasswordEncoder
 
@@ -71,5 +71,13 @@ class MemberKotestTest : StringSpec({
 
         member.deactivate()
         member.isActive() shouldBe false
+    }
+
+    "불필요한 이메일 입력시 예외 발생 테스트" {
+        shouldThrow<IllegalArgumentException> {
+            Member.create(MemberCreateRequest("invalid emain", "Soko", "secret"), passwordEncoder)
+        }
+
+        Member.create(MemberCreateRequest("kskyung0624@gmail.com", "Soko", "secret"), passwordEncoder)
     }
 })

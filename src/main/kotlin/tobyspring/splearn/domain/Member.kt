@@ -2,7 +2,7 @@ package tobyspring.splearn.domain
 
 
 class Member private constructor() {
-    lateinit var email: String
+    lateinit var email: Email
     lateinit var nickname: String
     lateinit var passwordHsh: String
     var status: MemberStatus = MemberStatus.PENDING
@@ -12,7 +12,7 @@ class Member private constructor() {
         fun create(createRequest: MemberCreateRequest, passwordEncoder: PasswordEncoder): Member {
             val member = Member()
 
-            member.email = createRequest.email
+            member.email = Email(createRequest.email)
             member.nickname = createRequest.nickname
             member.passwordHsh = passwordEncoder.encode(createRequest.password)
 
